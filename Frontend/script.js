@@ -1,4 +1,4 @@
-const API_BASE = 'https://public-radios-cheat.loca.lt';
+const API_BASE = 'https://cute-meals-jog.loca.lt';
 // Once you generate your localtunnel url, comment the line above and uncomment the line below:
 // const API_BASE = 'https://neat-spiders-type.loca.lt';
 
