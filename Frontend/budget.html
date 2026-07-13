@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budgets - Expense Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>💰 ExpenseTracker</h2>
+        <a href="index.html">Home</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="income.html">Income</a>
+        <a href="expenses.html">Expenses</a>
+        <a href="categories.html">Categories</a>
+        <a href="budget.html" class="active">Budgets</a>
+        <a href="#" onclick="logout()">Logout</a>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div>
+                <h1>Budget Planner</h1>
+                <p style="color: var(--text-muted); margin-top: 5px;">Manage monthly target limits, savings, and status warnings.</p>
+            </div>
+            <button class="btn btn-success" onclick="openModal('budgetModal')">+ Add Budget Plan</button>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Month</th>
+                        <th>Total Income</th>
+                        <th>Total Expense</th>
+                        <th>Savings</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="budgetModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Budget Plan</h2>
+                <button class="close-btn">&times;</button>
+            </div>
+            <form id="budgetForm">
+                <input type="hidden" name="user_name" id="form-user-name">
+                <div class="form-group">
+                    <label>Month & Year</label>
+                    <input type="text" name="month" required placeholder="July 2026, August 2026...">
+                </div>
+                <div class="form-group" style="display: flex; gap: 1rem;">
+                    <div style="flex:1">
+                        <label>Total Income ($)</label>
+                        <input type="number" step="0.01" name="total_income" id="total_income" required oninput="calcStatus()">
+                    </div>
+                    <div style="flex:1">
+                        <label>Total Expense ($)</label>
+                        <input type="number" step="0.01" name="total_expense" id="total_expense" required oninput="calcStatus()">
+                    </div>
+                </div>
+                <div class="form-group" style="display: flex; gap: 1rem;">
+                    <div style="flex:1">
+                        <label>Savings ($)</label>
+                        <input type="number" step="0.01" name="savings" id="savings" readonly>
+                    </div>
+                    <div style="flex:1">
+                        <label>Budget Status</label>
+                        <input type="text" name="budget_status" id="budget_status" readonly>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-danger" onclick="closeModal('budgetModal')">Cancel</button>
+                    <button type="submit" class="btn btn-success">Save Plan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        const userName = sessionStorage.getItem('user_name');
+        document.getElementById('form-user-name').value = userName;
+
+        function calcStatus() {
+            const inc = parseFloat(document.getElementById('total_income').value) || 0;
+            const exp = parseFloat(document.getElementById('total_expense').value) || 0;
+            const sav = inc - exp;
+            
+            document.getElementById('savings').value = sav.toFixed(2);
+            document.getElementById('budget_status').value = exp > inc ? 'Over Budget' : 'Under Budget';
+        }
+
+        async function loadData() {
+            const data = await fetchData('/budgets/');
+            const userData = data.filter(item => item.user_name === userName);
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+            userData.forEach(item => {
+                const statusColor = item.budget_status === 'Under Budget' ? '#10b981' : '#ef4444';
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${item.budget_id}</td>
+                        <td>${item.month}</td>
+                        <td class="income-val">$${parseFloat(item.total_income).toFixed(2)}</td>
+                        <td class="expense-val">$${parseFloat(item.total_expense).toFixed(2)}</td>
+                        <td style="font-weight:600; color: var(--primary-light)">$${parseFloat(item.savings).toFixed(2)}</td>
+                        <td><span style="color:white; background:${statusColor}; padding:4px 8px; border-radius:6px; font-size:0.85rem">${item.budget_status}</span></td>
+                        <td>
+                            <button class="btn btn-danger btn-small" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="deleteData(${item.budget_id})">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        document.getElementById('budgetForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            
+            await postData('/budgets/add/', data);
+            closeModal('budgetModal');
+            e.target.reset();
+            document.getElementById('form-user-name').value = userName;
+            loadData();
+        });
+
+        async function deleteData(id) {
+            if (confirm('Are you sure you want to delete this budget plan?')) {
+                await postData(`/budgets/delete/${id}/`, {}, 'DELETE');
+                loadData();
+            }
+        }
+
+        loadData();
+    </script>
+</body>
+</html>

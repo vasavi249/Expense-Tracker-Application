@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker - Home</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>💰 ExpenseTracker</h2>
+        <a href="index.html" class="active">Home</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="income.html">Income</a>
+        <a href="expenses.html">Expenses</a>
+        <a href="categories.html">Categories</a>
+        <a href="budget.html">Budgets</a>
+        <a href="#" onclick="logout()">Logout</a>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div>
+                <h1>Welcome to Expense Tracker</h1>
+                <p style="color: var(--text-muted); margin-top: 5px;">Take control of your personal and business finances with ease.</p>
+            </div>
+            <div>
+                <a href="login.html" class="btn">Login</a>
+                <a href="register.html" class="btn btn-success" style="margin-left: 10px;">Register</a>
+            </div>
+        </div>
+
+        <div class="dashboard-cards" style="margin-bottom: 3rem;">
+            <div class="card">
+                <h3>Track Income</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">Easily document salary, freelance earnings, dividends, and other incoming revenue sources to maintain an accurate financial standing.</p>
+            </div>
+            <div class="card">
+                <h3>Monitor Expenses</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">Log daily spending, assign categories (Food, Travel, Utilities), and track where your money goes in real-time.</p>
+            </div>
+            <div class="card">
+                <h3>Analyze Budgets</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">Define monthly limits for spend categories, monitor your savings goals, and get visual warnings when you exceed limits.</p>
+            </div>
+        </div>
+
+        <div class="table-container" style="padding: 2.5rem; background: var(--surface);">
+            <h2 style="margin-bottom: 1rem; font-weight: 700;">Financial Health Summary</h2>
+            <p style="color: var(--text-muted); line-height: 1.8; margin-bottom: 1.5rem;">
+                Studies show that tracking your spending manually or digitally reduces unnecessary impulse purchases by up to 20%. Expense Tracker compiles your financial reports to show you clear details on your savings and category expenditures. Register an account today to get started!
+            </p>
+            <ul style="list-style-type: disc; margin-left: 2rem; color: var(--text-muted); line-height: 1.8;">
+                <li>Secure local SQLite/MySQL database systems.</li>
+                <li>Intuitive categorization and dashboard summaries.</li>
+                <li>Dynamic limits warning indicators.</li>
+                <li>Complete transaction log lookup with filters.</li>
+            </ul>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
