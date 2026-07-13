@@ -1,4 +1,4 @@
-const API_BASE = 'http://127.0.0.1:8000';
+const API_BASE = 'https://stupid-worms-divide.loca.lt';
 // Once you generate your localtunnel url, comment the line above and uncomment the line below:
 // const API_BASE = 'https://neat-spiders-type.loca.lt';
 
